@@ -1,0 +1,1 @@
+from .photo_feed_model import PhotoFeedModel

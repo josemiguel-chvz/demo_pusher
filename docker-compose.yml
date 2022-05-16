@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  postgres_db:
+    image: postgres
+    volumes:
+      - ./data/postgres_db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=pusher_demo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5438:5432"
+  app:
+    build: .
+    image: demo_pusher_backend:latest
+    container_name: demo_pusher_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=pusher_demo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    depends_on:
+      - postgres_db
+  frontend:
+    container_name: demo_pusher_frontend
+    build: .
+    image: demo_pusher_frontend:latest
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start

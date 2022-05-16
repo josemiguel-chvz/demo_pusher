@@ -1,0 +1,1 @@
+from .find_photo_feed_serializer import FindPhotoFeedSerializer
